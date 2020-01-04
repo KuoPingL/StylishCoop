@@ -21,10 +21,12 @@ import javax.net.ssl.X509TrustManager
 /**
  * Created by Wayne Chen in Jul. 2019.
  */
-private const val FINAL_HOST_NAME = "stuarrrt.com"
+private const val HOST_NAME_v2 = "stuarrrt.com"
 private const val HOST_NAME = "api.appworks-school.tw"
+private const val API_VERSION_v2 = "1.0"
 private const val API_VERSION = "1.0"
 private const val BASE_URL = "https://$HOST_NAME/api/$API_VERSION/"
+private const val BASE_URL_v2 = "https://$HOST_NAME_v2/api/$API_VERSION_v2/"
 
 /**
  * Build the Moshi object that Retrofit will be using, making sure to add the Kotlin adapter for
@@ -83,7 +85,7 @@ class MyOkHTTPClientBuilder {
                         trustAllCerts.first() as X509TrustManager
                     )
                     okHttpClient.hostnameVerifier(HostnameVerifier { hostname, session ->
-                        hostname == HOST_NAME
+                        hostname == HOST_NAME_v2 || hostname == HOST_NAME
                     })
                 }
 
@@ -109,10 +111,12 @@ private val retrofit = Retrofit.Builder()
 /**
  * Use this Retrofit for Staurt's API
  */
-//private val finalRetrofit = Retrofit.Builder()
-//    .addConverterFactory(MoshiConverterFactory.create(moshi))
-//    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-//    .baseUrl()
+private val retrofit_v2 = Retrofit.Builder()
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    .baseUrl(BASE_URL_v2)
+    .client(client)
+    .build()
 
 /**
  * A public interface that exposes the [getMarketingHots], [getProductList], [getUserProfile],
@@ -173,3 +177,4 @@ interface StylishApiService {
 object StylishApi {
     val retrofitService : StylishApiService by lazy { retrofit.create(StylishApiService::class.java) }
 }
+
