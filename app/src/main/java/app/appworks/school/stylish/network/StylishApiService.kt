@@ -21,8 +21,8 @@ import javax.net.ssl.X509TrustManager
 /**
  * Created by Wayne Chen in Jul. 2019.
  */
-//private const val HOST_NAME = "stuarrrt.com"
-private const val HOST_NAME = "api.appworks-school.tw"
+private const val FINAL_HOST_NAME = "stuarrrt.com"
+private const val HOST_NAME = "fujimmy.com"// "api.appworks-school.tw"
 private const val API_VERSION = "1.0"
 private const val BASE_URL = "https://$HOST_NAME/api/$API_VERSION/"
 
@@ -105,6 +105,14 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .client(client)
     .build()
+
+/**
+ * Use this Retrofit for Staurt's API
+ */
+//private val finalRetrofit = Retrofit.Builder()
+//    .addConverterFactory(MoshiConverterFactory.create(moshi))
+//    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+//    .baseUrl()
 
 /**
  * A public interface that exposes the [getMarketingHots], [getProductList], [getUserProfile],
