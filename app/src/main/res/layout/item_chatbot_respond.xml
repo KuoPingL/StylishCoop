@@ -1,6 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-</LinearLayout>
+    <data>
+        <variable
+                name="chatbotDialog"
+                type="app.appworks.school.stylish.data.ChatbotDialog" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="80dp"
+            android:paddingStart="15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:clipToPadding="false"
+            >
+
+        <ImageView
+                android:id="@+id/imageview_chatbot_botimage"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/icon_chatbot"
+                />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_chatbot_respond_content"
+                app:layout_constraintTop_toTopOf="@id/imageview_chatbot_botimage"
+                app:layout_constraintStart_toEndOf="@id/imageview_chatbot_botimage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/their_message"
+                android:paddingEnd="20dp"
+                android:paddingStart="10dp"
+                android:layout_marginStart="8dp"
+                >
+
+
+            <TextView
+                    android:id="@+id/textview_chatbot_respond_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="@{chatbotDialog.message}"
+                    tools:text="dsaflkdsjanjljlkdjsldkjfdjflsajflk jlkja skjlsak jlkasjflk dsajlf"
+                    android:maxWidth="120dp"
+                    />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_chatbot_response_buttons"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:chatbotButtons="@{chatbotDialog.chatButtons}"
+                    app:layout_constraintTop_toBottomOf="@id/textview_chatbot_respond_message"
+                    app:layout_constraintStart_toStartOf="@id/textview_chatbot_respond_message"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="20dp"
+                    />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/layout_chatbot_respond_content"
+                app:layout_constraintStart_toEndOf="@id/layout_chatbot_respond_content"
+                app:dateToString="@{chatbotDialog.sentTime}"
+                tools:text="fdjsalfjdsalk"
+                android:layout_marginStart="8dp"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -108,4 +108,40 @@
     <action android:id="@+id/navigate_to_message_dialog" app:destination="@id/messageDialog"/>
     <action android:id="@+id/navigate_to_add2cart_dialog" app:destination="@id/add2cartDialog"/>
 
+
+    <dialog
+            android:id="@+id/adFragment"
+            android:name="app.appworks.school.stylish.ad.AdFragment"
+            android:label="AdFragment" />
+    <action
+            android:id="@+id/action_global_adFragment"
+            app:destination="@id/adFragment" />
+    <dialog
+            android:id="@+id/userLoginDialog"
+            android:name="app.appworks.school.stylish.userlogin.UserLoginDialog"
+            android:label="userLoginDialog" />
+    <action
+            android:id="@+id/action_global_userLoginDialog"
+            app:destination="@id/userLoginDialog" />
+
+
+
+    <dialog
+            android:id="@+id/emailLoginDialog"
+            android:name="app.appworks.school.stylish.login.EmailLoginDialog"
+            android:label="EmailLoginDialog" />
+    <action
+            android:id="@+id/action_global_emailLoginDialog"
+            app:destination="@id/emailLoginDialog" />
+    <action
+            android:id="@+id/action_navigate_to_payment_fragment"
+            app:destination="@id/paymentFragment" />
+    <dialog
+            android:id="@+id/heightWeightDialog"
+            android:name="app.appworks.school.stylish.dialog.HeightWeightDialog"
+            android:label="HeightWeightDialog" />
+    <action
+            android:id="@+id/action_global_heightWeightDialog"
+            app:destination="@id/heightWeightDialog" />
+
 </navigation>

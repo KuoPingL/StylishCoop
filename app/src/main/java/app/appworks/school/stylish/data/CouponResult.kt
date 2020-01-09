@@ -7,12 +7,6 @@ import kotlinx.android.parcel.RawValue
 import org.json.JSONException
 
 @Parcelize
-data class CouponResult(
-    @Json(name = "data") val coupons: List<Coupon>? = null,
-    val error: String? = null
-): Parcelable
-
-@Parcelize
 data class CouponMultitypeResult(val coupons: List<Coupon>? = null,
                                  val message: String? = null,
                                  val error: String? = null): Parcelable

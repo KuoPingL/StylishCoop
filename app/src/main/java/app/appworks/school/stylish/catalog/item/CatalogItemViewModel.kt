@@ -11,7 +11,9 @@ import app.appworks.school.stylish.StylishApplication
 import app.appworks.school.stylish.catalog.CatalogTypeFilter
 import app.appworks.school.stylish.component.GridSpacingItemDecoration
 import app.appworks.school.stylish.data.Product
+import app.appworks.school.stylish.data.UserRecord
 import app.appworks.school.stylish.data.source.StylishRepository
+import app.appworks.school.stylish.login.UserManager
 import app.appworks.school.stylish.network.LoadApiStatus
 import app.appworks.school.stylish.network.Order
 import app.appworks.school.stylish.network.Sort
@@ -19,6 +21,7 @@ import app.appworks.school.stylish.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -93,6 +96,17 @@ class CatalogItemViewModel(
     }
 
     fun navigateToDetail(product: Product) {
+
+        if (UserManager.isLoggedIn) {
+            coroutineScope.launch {
+                stylishRepository.getProductDetail(UserManager.userToken ?: "", UserManager.userCurrency, product.id.toString())
+            }
+        } else {
+            coroutineScope.launch {
+                stylishRepository.insert(UserRecord(product.id, product.title, product.price, product.mainImage))
+            }
+        }
+
         _navigateToDetail.value = product
     }
 

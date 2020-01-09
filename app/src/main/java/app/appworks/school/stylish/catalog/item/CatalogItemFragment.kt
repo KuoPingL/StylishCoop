@@ -26,9 +26,10 @@ class CatalogItemFragment(private val catalogType: CatalogTypeFilter, private va
      * Lazily initialize our [CatalogItemViewModel].
      */
 
-    // (1) what does by  means??
+    // (1) what does by  means?? delegate
     // (2) viewModels<CatalogItemViewModel> ??
     // (3){ getVmFactory(catalogType, sort, order) }
+//    private val viewModel by viewModels<CatalogItemViewModel> { getVmFactory(catalogType, sort, order) }
     private val viewModel by viewModels<CatalogItemViewModel> { getVmFactory(catalogType, sort, order) }
 
 

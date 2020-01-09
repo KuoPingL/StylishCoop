@@ -18,6 +18,11 @@ class CatalogAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapt
     var order = Order.DESCEND
 
     override fun getItem(position: Int): Fragment {
+
+
+
+        //have fun getItem returns a fragment companion object with more parameters
+
         return CatalogItemFragment(CatalogTypeFilter.values()[position], sort, order)
     }
 

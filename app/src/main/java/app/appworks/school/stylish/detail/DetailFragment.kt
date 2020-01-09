@@ -1,6 +1,8 @@
 package app.appworks.school.stylish.detail
 
+import android.graphics.Rect
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import app.appworks.school.stylish.NavigationDirections
 import app.appworks.school.stylish.databinding.FragmentDetailBinding
+import app.appworks.school.stylish.detail.chatbot.ChatbotMainFragment
+import app.appworks.school.stylish.ext.chatbotCollapse
+import app.appworks.school.stylish.ext.chatbotExpand
 import app.appworks.school.stylish.ext.getVmFactory
+import app.appworks.school.stylish.ext.toPixel
+import app.appworks.school.stylish.login.UserManager
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -36,6 +44,28 @@ class DetailFragment : Fragment() {
         binding.recyclerDetailCircles.adapter = DetailCircleAdapter()
         binding.recyclerDetailColor.adapter = DetailColorAdapter()
 
+        binding.recyclerDetailRecords.adapter = DetailUserRecordAdapter()
+
+        binding.recyclerDetailRecords.addItemDecoration(object: RecyclerView.ItemDecoration(){
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                val index = parent.indexOfChild(view)
+                val px = 10.toPixel().toInt()
+                when (index) {
+                    0 -> {
+                        outRect.left = 0
+                    }
+                    else -> {
+                        outRect.set(px, 0, 0, 0)
+                    }
+                }
+            }
+        })
+
         val linearSnapHelper = LinearSnapHelper().apply {
             attachToRecyclerView(binding.recyclerDetailGallery)
         }
@@ -46,6 +76,9 @@ class DetailFragment : Fragment() {
                     linearSnapHelper
                 )
         }
+
+
+
 
         // set the initial position to the center of infinite gallery
         viewModel.product.value?.let { product ->
@@ -70,7 +103,66 @@ class DetailFragment : Fragment() {
             }
         })
 
+        /**
+         * USERRECORD
+         */
+
+        viewModel.saveRecord()
+
+        if (UserManager.isLoggedIn) {
+            viewModel.record.observe(this, Observer {
+                (binding.recyclerDetailRecords.adapter as? DetailUserRecordAdapter)?.apply {
+                    submitList(it)
+                    notifyDataSetChanged()
+                }
+            })
+        } else {
+            viewModel.remoteRecord.observe(this, Observer {
+                (binding.recyclerDetailRecords.adapter as? DetailUserRecordAdapter)?.apply {
+                    submitList(it)
+                    notifyDataSetChanged()
+                }
+            })
+        }
+
+
+
+        /**
+         * CHATBOT
+         */
+        viewModel.chatbotStatus.observe(this, Observer {
+            it?.let { chatbotStatus ->
+                when (chatbotStatus){
+                    DetailViewModel.ChatbotStatus.SHOWING -> {
+                        binding.layoutDetailChatbot.chatbotExpand()
+                        Handler().postDelayed({
+                            viewModel.resetChatbotStatus()
+                        }, 600)
+                    }
+
+                    DetailViewModel.ChatbotStatus.HIDING -> {
+                        binding.layoutDetailChatbot.chatbotCollapse()
+                        viewModel.resetChatbotStatus()
+                    }
+
+                    else -> {}
+                }
+            }
+        })
+
+
         return binding.root
+    }
+
+    override fun onAttachFragment(childFragment: Fragment) {
+        super.onAttachFragment(childFragment)
+
+        when(childFragment) {
+            is ChatbotMainFragment -> {
+                childFragment.detailViewModel = viewModel
+                childFragment.product = DetailFragmentArgs.fromBundle(arguments!!).productKey
+            }
+        }
     }
 
 

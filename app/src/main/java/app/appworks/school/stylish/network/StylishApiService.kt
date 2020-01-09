@@ -21,7 +21,9 @@ import javax.net.ssl.X509TrustManager
 /**
  * Created by Wayne Chen in Jul. 2019.
  */
-private const val HOST_NAME = "api.appworks-school.tw"
+
+//private const val HOST_NAME = "stuarrrt.com"
+private const val HOST_NAME = "api.appworks-school.tw"//stuarrrt.com"//"api.appworks-school.tw"
 private const val API_VERSION = "1.0"
 private const val BASE_URL = "https://$HOST_NAME/api/$API_VERSION/"
 

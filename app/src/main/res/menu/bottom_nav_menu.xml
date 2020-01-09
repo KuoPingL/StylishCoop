@@ -20,5 +20,9 @@
             android:id="@+id/navigation_profile"
             android:icon="@drawable/ic_nav_profile_selector"
             android:title=""/>
-
+    <item
+            android:id="@+id/navigation_groupon"
+            android:title="Groupon"
+            android:icon="@drawable/ic_detail_close"
+            />
 </menu>

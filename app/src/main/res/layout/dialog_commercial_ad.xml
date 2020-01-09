@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+
+        <variable
+                name="viewModel"
+                type="app.appworks.school.stylish.ad.AdViewModel" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        <ImageView
+                android:id="@+id/imageView_ad"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{viewModel.advertisePicture}"
+                app:layout_constraintBottom_toTopOf="@id/textView_seconds_countdown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_close_ad" />
+
+        <ProgressBar
+                android:id="@+id/progressBar_ad"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageView_ad"
+
+                />
+
+        <TextView
+                android:id="@+id/textView_seconds_countdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{viewModel.advertiseCountDown.toString() }'
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+                android:id="@+id/textView_close_get_coupon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/textView_close_get_coupon"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textView_seconds_countdown"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+                android:id="@+id/button_close_ad"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/com_facebook_close"
+                android:onClick="@{() -> viewModel.leave()}"
+                android:visibility="@{viewModel.advertiseCountDown == 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+
+        <!--        android:src ="@drawable/krispy_kreme"-->

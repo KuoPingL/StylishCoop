@@ -9,8 +9,11 @@ import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import app.appworks.school.stylish.MainActivity
 import app.appworks.school.stylish.NavigationDirections
+import app.appworks.school.stylish.R
 import app.appworks.school.stylish.data.Currency
 import app.appworks.school.stylish.data.CurrencyDropItem
 import app.appworks.school.stylish.databinding.FragmentHomeBinding
@@ -78,6 +81,11 @@ class HomeFragment : Fragment() {
             }
 
         }
+
+        /**
+         * CHECK if user is first login or has login
+         * */
+
 
         return binding.root
     }

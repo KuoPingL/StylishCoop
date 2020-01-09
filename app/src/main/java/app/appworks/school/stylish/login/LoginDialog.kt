@@ -44,6 +44,7 @@ class LoginDialog : AppCompatDialogFragment() {
         binding.viewModel = viewModel
         binding.buttonLoginClose.setTouchDelegate()
 
+
         val mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
 
         viewModel.user.observe(this, Observer {

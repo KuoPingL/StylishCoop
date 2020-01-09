@@ -6,6 +6,7 @@ import app.appworks.school.stylish.add2cart.Add2cartViewModel
 import app.appworks.school.stylish.data.Product
 import app.appworks.school.stylish.data.source.StylishRepository
 import app.appworks.school.stylish.detail.DetailViewModel
+import app.appworks.school.stylish.detail.chatbot.ChatbotViewModel
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -26,6 +27,8 @@ class ProductViewModelFactory(
 
                 isAssignableFrom(Add2cartViewModel::class.java) ->
                     Add2cartViewModel(stylishRepository, product)
+                isAssignableFrom(ChatbotViewModel::class.java) ->
+                    ChatbotViewModel(stylishRepository, product)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

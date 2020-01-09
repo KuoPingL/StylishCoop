@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import app.appworks.school.stylish.data.Product
 import app.appworks.school.stylish.data.source.StylishRepository
+import app.appworks.school.stylish.login.UserManager
 import app.appworks.school.stylish.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,11 @@ class CartViewModel(private val stylishRepository: StylishRepository) : ViewMode
 
     val navigateToPayment: LiveData<Boolean>
         get() = _navigateToPayment
+
+    private val _navigateToLoginPage = MutableLiveData<Boolean>()
+    val navigateToLoginPage: LiveData<Boolean>
+        get() = _navigateToLoginPage
+
 
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
@@ -49,7 +55,17 @@ class CartViewModel(private val stylishRepository: StylishRepository) : ViewMode
     }
 
     fun navigateToPayment() {
+
+        if (UserManager.userToken == null) {
+            _navigateToLoginPage.value = true
+            return
+        }
+
         _navigateToPayment.value = true
+    }
+
+    fun onLoginNavigated() {
+        _navigateToLoginPage.value = null
     }
 
     fun onPaymentNavigated() {

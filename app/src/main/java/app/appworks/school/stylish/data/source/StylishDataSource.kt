@@ -2,7 +2,6 @@ package app.appworks.school.stylish.data.source
 
 import androidx.lifecycle.LiveData
 import app.appworks.school.stylish.data.*
-import app.appworks.school.stylish.login.Currency
 import app.appworks.school.stylish.network.Order
 import app.appworks.school.stylish.network.Sort
 
@@ -35,6 +34,12 @@ interface StylishDataSource {
 
     fun getProductsInCart(): LiveData<List<Product>>
 
+    fun getUserViewRecords(): LiveData<List<UserRecord>>
+
+    suspend fun insert(userRecord:UserRecord)
+
+    suspend fun deleteAllViewRecords()
+
     suspend fun getProductDetail(token: String, currency: String, productId: String): Result<ProductDetailResult>
 
     suspend fun getUserViewingRecord(token: String): Result<UserRecordsResult>
@@ -57,4 +62,27 @@ interface StylishDataSource {
     suspend fun clearProductInCart()
 
     suspend fun getUserInformation(key: String?): String
+
+    /***
+     * AD
+     */
+
+    suspend fun getAd():Result<AdResult>
+
+    /***
+     * ChatBot
+     */
+    fun getAllChats(): LiveData<List<Chat>>
+    suspend fun insertChat(chat: Chat)
+    suspend fun clearChats()
+    suspend fun getReplyFromChatbot(question: ChatbotBody):Result<ChatbotReplyMultiTypeResult>
+
+    /**
+     * Groupon
+     */
+    suspend fun getGroupBuys(token: String): Result<GetGroupBuyResult>
+
+    suspend fun createGroupBuy(addGroupBuyBody: AddGroupBuyBody): Result<AddGroupBuyResult>
+
+    suspend fun updateGroupBuy(token: String, productID: Long): Result<JoinGroupBuyResult>
 }

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import app.appworks.school.stylish.NavigationDirections
 import app.appworks.school.stylish.databinding.FragmentCartBinding
 import app.appworks.school.stylish.ext.getVmFactory
 
@@ -35,8 +36,15 @@ class CartFragment : Fragment() {
 
         viewModel.navigateToPayment.observe(this, Observer {
             it?.let {
-                findNavController().navigate(CartFragmentDirections.navigateToPaymentFragment())
+                findNavController().navigate(NavigationDirections.actionNavigateToPaymentFragment())
                 viewModel.onPaymentNavigated()
+            }
+        })
+
+        viewModel.navigateToLoginPage.observe(this, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalEmailLoginDialog())
+                viewModel.onLoginNavigated()
             }
         })
 

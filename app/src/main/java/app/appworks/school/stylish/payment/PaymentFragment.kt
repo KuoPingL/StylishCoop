@@ -67,12 +67,12 @@ class PaymentFragment : Fragment() {
             }
         })
 
-        viewModel.navigateToLogin.observe(this, Observer {
-            it?.let {
-                findNavController().navigate(NavigationDirections.navigateToLoginDialog())
-                viewModel.onLoginNavigated()
-            }
-        })
+//        viewModel.navigateToLogin.observe(this, Observer {
+//            it?.let {
+//                findNavController().navigate(NavigationDirections.actionGlobalEmailLoginDialog())
+//                viewModel.onLoginNavigated()
+//            }
+//        })
 
         return binding.root
     }

@@ -21,21 +21,17 @@ import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import app.appworks.school.stylish.data.Coupon
-import app.appworks.school.stylish.data.CouponBody
-import app.appworks.school.stylish.data.Result
+import app.appworks.school.stylish.ad.AdFragment
 import app.appworks.school.stylish.data.source.remote.StylishRemoteDataSource
-import app.appworks.school.stylish.databinding.ActivityMainBinding
-import app.appworks.school.stylish.databinding.BadgeBottomBinding
-import app.appworks.school.stylish.databinding.FragmentCatalogBinding
-import app.appworks.school.stylish.databinding.NavHeaderDrawerBinding
+import app.appworks.school.stylish.databinding.*
 import app.appworks.school.stylish.dialog.MessageDialog
 import app.appworks.school.stylish.ext.getVmFactory
-import app.appworks.school.stylish.login.Currency
+import app.appworks.school.stylish.login.LoginDialog
 import app.appworks.school.stylish.login.UserManager
 import app.appworks.school.stylish.network.StylishApiFilter
 import app.appworks.school.stylish.network.Order
 import app.appworks.school.stylish.network.Sort
+import app.appworks.school.stylish.userlogin.UserLoginDialog
 import app.appworks.school.stylish.util.CurrentFragmentType
 import app.appworks.school.stylish.util.DrawerToggleType
 import app.appworks.school.stylish.util.Logger
@@ -45,6 +41,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -57,32 +54,39 @@ class MainActivity : BaseActivity() {
     val viewModel by viewModels<MainViewModel> { getVmFactory() }
 
 
+
 //    private lateinit var binding1:FragmentCatalogBinding
+
+//    private lateinit var binding2:DialogCommercialAdBinding
+
 
     private lateinit var binding: ActivityMainBinding
     private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private var targetID = 0
 
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-
+                    targetID = R.id.navigation_home
                     findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToHomeFragment())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_catalog -> {
-
+                    targetID = R.id.navigation_catalog
                     findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToCatalogFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_cart -> {
 
+                R.id.navigation_cart -> {
+                    targetID = R.id.navigation_cart
                     findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToCartFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_profile -> {
 
+                R.id.navigation_profile -> {
+                    targetID = R.id.navigation_profile
                     when (viewModel.isLoggedIn) {
                         true -> {
                             findNavController(R.id.myNavHostFragment).navigate(
@@ -92,7 +96,7 @@ class MainActivity : BaseActivity() {
                             )
                         }
                         false -> {
-                            findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToLoginDialog())
+                            findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.actionGlobalEmailLoginDialog())
                             return@OnNavigationItemSelectedListener false
                         }
                     }
@@ -112,6 +116,10 @@ class MainActivity : BaseActivity() {
             }
         }
 
+    private var userLogin:UserLoginDialog? = null
+
+    private var userLoginAndShowAd: AdFragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -120,6 +128,12 @@ class MainActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+
+
+
+
+
 
         // observe current fragment change, only for show info
         viewModel.currentFragmentType.observe(this, Observer {
@@ -133,13 +147,22 @@ class MainActivity : BaseActivity() {
                 findNavController(R.id.myNavHostFragment).navigate(
                     NavigationDirections.navigateToMessageDialog(MessageDialog.MessageType.LOGIN_SUCCESS)
                 )
+                
                 viewModel.onLoginSuccessNavigated()
+
 
                 // navigate to profile after login success
                 when (viewModel.currentFragmentType.value) {
-                    CurrentFragmentType.PAYMENT -> {
+                    CurrentFragmentType.CART -> {
+                        if (targetID == R.id.navigation_profile) {
+                            viewModel.navigateToProfileByBottomNav(it)
+                        }
                     }
-                    else -> viewModel.navigateToProfileByBottomNav(it)
+                    else -> {
+                        if(targetID == R.id.navigation_profile) {
+                            viewModel.navigateToProfileByBottomNav(it)
+                        }
+                    }
                 }
             }
         })
@@ -158,39 +181,211 @@ class MainActivity : BaseActivity() {
             }
         })
 
+
+
+
+
         setupToolbar()
         setupBottomNav()
         setupDrawer()
         setupNavController()
 
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val tag = "RECORD VIEW"
+//            val result = StylishRemoteDataSource.userSignIn("abc@gmail.com", "name")
+//            when (result) {
+//                is Result.Success -> {
+//                    if (result.data.error != null) {
+//                        Log.i(tag, "ERROR : ${result.data.error}")
+//                    } else {
+//                        Log.i(tag, "RESULT : ${result.data.userSignIn}")
+//
+//
+//                    }
+//                }
+//
+//                is Result.Error -> {
+//                    Log.i(tag, "ERROR : ${result.exception.message}")
+//                }
+//
+//                is Result.Fail -> {
+//                    Log.i(tag, "FAIL : ${result.error}")
+//                }
+//            }
+//
+//        }
+
 
         val testtoken = "9c9ddeea44206d5eb1ec1827a4e55efe3e221cbcca6abc089ef6ba9bb37e740e"
         val dummyToken = "2f7c7900c565ae05f9e8cae6b87828778d98b494b36b8db2f361e041c243a72a"
 
+        /**
+         * GROUPBUY
+         */
+
+        /**
+         * FETCH GROUPBUY
+         */
+
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val tag = "JOIN GROUP BUY"
+//            val result = StylishRemoteDataSource.getGroupBuys("11022fcae1ee7cc9097c24eecd60950839fc467762ae78a433441acdb0c8ecbb")
+//
+//            when (result) {
+//                is Result.Success -> {
+//                    if (result.data.error != null) {
+//                        Log.i(tag, "ERROR : ${result.data.error}")
+//                    } else {
+//                        Log.i(tag, "RESULT : ${result.data.data}")
+//                    }
+//                }
+//
+//                is Result.Error -> {
+//                    Log.i(tag, "ERROR : ${result.exception.message}")
+//                }
+//
+//                is Result.Fail -> {
+//                    Log.i(tag, "FAIL : ${result.error}")
+//                }
+//            }
+//
+//        }
+
+        /**
+         * JOIN GROUPBUY
+         */
+
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val tag = "JOIN GROUP BUY"
+//            val result = StylishRemoteDataSource.updateGroupBuy("11022fcae1ee7cc9097c24eecd60950839fc467762ae78a433441acdb0c8ecbb", 201902191245)
+//
+//            when (result) {
+//                is Result.Success -> {
+//                    if (result.data.error != null) {
+//                        Log.i(tag, "ERROR : ${result.data.error}")
+//                    } else {
+//                        Log.i(tag, "RESULT : ${result.data.success}")
+//                    }
+//                }
+//
+//                is Result.Error -> {
+//                    Log.i(tag, "ERROR : ${result.exception.message}")
+//                }
+//
+//                is Result.Fail -> {
+//                    Log.i(tag, "FAIL : ${result.error}")
+//                }
+//            }
+//
+//        }
+
+
+        /**
+         * CREATE GROUPBUY
+         */
+//                CoroutineScope(Dispatchers.Main).launch {
+//                        val tag = "GROUP BUY"
+//            val result = StylishRemoteDataSource.createGroupBuy(AddGroupBuyBody("11022fcae1ee7cc9097c24eecd60950839fc467762ae78a433441acdb0c8ecbb", 201807201824, "test12@test.com", "test13@test.com"))
+//
+//            when (result) {
+//                is Result.Success -> {
+//                    if (result.data.error != null) {
+//                        Log.i(tag, "ERROR : ${result.data.error}")
+//                    } else {
+//                        Log.i(tag, "RESULT : ${result.data.groupID}")
+//                    }
+//                }
+//
+//                is Result.Error -> {
+//                    Log.i(tag, "ERROR : ${result.exception.message}")
+//                }
+//
+//                is Result.Fail -> {
+//                    Log.i(tag, "FAIL : ${result.error}")
+//                }
+//            }
+//
+//        }
+
+        /***
+         * CHATBOT
+         */
+
+//        CoroutineScope(Dispatchers.Main).launch {
+//                        val tag = "CHAT BOT"
+//            val result = StylishRemoteDataSource.getReplyFromChatbot(ChatbotBody(2, 201807242222, 178.0, 70.0))
+//
+//            when (result) {
+//                is Result.Success -> {
+//                    if (result.data.error != null) {
+//                        Log.i(tag, "ERROR : ${result.data.error}")
+//                    } else {
+//                        Log.i(tag, "RESULT : ${result.data.reply}, ACTIVITY : ${result.data.activities}")
+//                    }
+//                }
+//
+//                is Result.Error -> {
+//                    Log.i(tag, "ERROR : ${result.exception.message}")
+//                }
+//
+//                is Result.Fail -> {
+//                    Log.i(tag, "FAIL : ${result.error}")
+//                }
+//            }
+//
+//        }
+
+        /***
+         * AD
+         */
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val tag = "GET AD"
+//            val result = StylishRemoteDataSource.getAd()
+//
+//            when (result) {
+//                is Result.Success -> {
+//                    if (result.data.error != null) {
+//                        Log.i(tag, "ERROR : ${result.data.error}")
+//                    } else {
+//                        Log.i(tag, "RESULT : ${result.data.ad}")
+//                    }
+//                }
+//
+//                is Result.Error -> {
+//                    Log.i(tag, "ERROR : ${result.exception.message}")
+//                }
+//
+//                is Result.Fail -> {
+//                    Log.i(tag, "FAIL : ${result.error}")
+//                }
+//            }
+//
+//        }
+
         /** Get Product Detail*/
-        CoroutineScope(Dispatchers.Main).launch {
-            val tag = "GET PRODUCT DETAIL"
-            val result = StylishRemoteDataSource.getProductDetail("f272145222f587ee40e63f9c1c6161f8d990073efb6146250566a677e6fe8bb5", Currency.JPY.abbreviate, "201807201824")
-
-            when (result) {
-                is Result.Success -> {
-                    if (result.data.error != null) {
-                        Log.i(tag, "ERROR : ${result.data.error}")
-                    } else {
-                        Log.i(tag, "RESULT : ${result.data.product}")
-                    }
-                }
-
-                is Result.Error -> {
-                    Log.i(tag, "ERROR : ${result.exception.message}")
-                }
-
-                is Result.Fail -> {
-                    Log.i(tag, "FAIL : ${result.error}")
-                }
-            }
-
-        }
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val tag = "GET PRODUCT DETAIL"
+//            val result = StylishRemoteDataSource.getProductDetail("f272145222f587ee40e63f9c1c6161f8d990073efb6146250566a677e6fe8bb5", getString(Currency.JPY.abbRes), "201807201824")
+//
+//            when (result) {
+//                is Result.Success -> {
+//                    if (result.data.error != null) {
+//                        Log.i(tag, "ERROR : ${result.data.error}")
+//                    } else {
+//                        Log.i(tag, "RESULT : ${result.data.product}")
+//                    }
+//                }
+//
+//                is Result.Error -> {
+//                    Log.i(tag, "ERROR : ${result.exception.message}")
+//                }
+//
+//                is Result.Fail -> {
+//                    Log.i(tag, "FAIL : ${result.error}")
+//                }
+//            }
+//
+//        }
 
         /**Fetch Product List*/
 
@@ -405,8 +600,49 @@ class MainActivity : BaseActivity() {
 //            }
 //        }
 
+    } //closing curly brace of fun onCreate
+
+    var isFirstTime = true
+    override fun onResume() {
+        super.onResume()
+
+        if (isFirstTime) {
+            if(UserManager.isLoggedIn) {
+                findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.actionGlobalAdFragment())
+            } else {
+                userLogin = UserLoginDialog{shouldSignInOrSignUp ->
+                    if (shouldSignInOrSignUp) {
+                        // show dialog for signin/signup
+                        findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.actionGlobalEmailLoginDialog())
+//                        if(UserManager.isLoggedIn){
+
+//                            userLoginAndShowAd =  AdFragment{shouldShowAd:Boolean ->
+//                                if(shouldShowAd==true) {
+//                                    findNavController(R.id.myNavHostFragment).navigate(
+//                                        NavigationDirections.actionGlobalAdFragment()
+//                                    )
+//                                }
+//
+//
+//                            }
+//                        findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.actionGlobalAdFragment())
+//                        }
+                    } else {
+                        // fetch ad and displays it
+                        findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.actionGlobalAdFragment())
+                    }
+                }
+
+                // FragmentManager is a Interface for interacting with Fragment objects inside of an Activity
+                userLogin?.show(supportFragmentManager, "tag")
+
+            }
+        }
+
+        isFirstTime = false
 
     }
+
 
     /**
      * Set up [BottomNavigationView], add badge view through [BottomNavigationMenuView] and [BottomNavigationItemView]
@@ -519,7 +755,7 @@ class MainActivity : BaseActivity() {
                         viewModel.checkUser()
                     }
                     else -> {
-                        findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToLoginDialog())
+                        findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.actionGlobalEmailLoginDialog())//.navigateToLoginDialog())
                         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
                             binding.drawerLayout.closeDrawer(GravityCompat.START)
                         }

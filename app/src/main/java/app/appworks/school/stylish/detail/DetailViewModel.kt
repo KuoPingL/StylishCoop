@@ -1,6 +1,7 @@
 package app.appworks.school.stylish.detail
 
 import android.graphics.Rect
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,11 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import app.appworks.school.stylish.R
 import app.appworks.school.stylish.StylishApplication
 import app.appworks.school.stylish.data.Product
+import app.appworks.school.stylish.data.Result
+import app.appworks.school.stylish.data.User
+import app.appworks.school.stylish.data.UserRecord
 import app.appworks.school.stylish.data.source.StylishRepository
+import app.appworks.school.stylish.login.UserManager
 import app.appworks.school.stylish.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -26,6 +32,10 @@ class DetailViewModel(
     private val stylishRepository: StylishRepository,
     private val arguments: Product
 ) : ViewModel() {
+
+    enum class ChatbotStatus {
+        SHOWING, HIDING, DONESHOWING, DONEHIDING
+    }
 
     // Detail has product data from arguments
     private val _product = MutableLiveData<Product>().apply {
@@ -61,6 +71,8 @@ class DetailViewModel(
     val leaveDetail: LiveData<Boolean>
         get() = _leaveDetail
 
+
+
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
@@ -93,6 +105,7 @@ class DetailViewModel(
         Logger.i("------------------------------------")
         Logger.i("[${this::class.simpleName}]${this}")
         Logger.i("------------------------------------")
+        fetchUserRecord()
     }
 
     /**
@@ -120,4 +133,93 @@ class DetailViewModel(
     fun leaveDetail() {
         _leaveDetail.value = true
     }
+
+
+    /**
+     * CHATBOT
+     */
+
+    private val _chatbotStatus = MutableLiveData<ChatbotStatus>()
+
+    val chatbotStatus: LiveData<ChatbotStatus>
+        get() = _chatbotStatus
+
+    val isChatbotShown = MutableLiveData<Boolean>()
+
+    fun showChatbot(isShown: Boolean?) {
+
+        if (isShown == null || isShown == false) {
+            _chatbotStatus.value = ChatbotStatus.SHOWING
+        } else {
+            _chatbotStatus.value = ChatbotStatus.HIDING
+        }
+    }
+
+    fun resetChatbotStatus() {
+        if (_chatbotStatus.value == ChatbotStatus.SHOWING) {
+            _chatbotStatus.value = ChatbotStatus.DONESHOWING
+            isChatbotShown.value = true
+        } else {
+            _chatbotStatus.value = ChatbotStatus.DONEHIDING
+            isChatbotShown.value = false
+        }
+    }
+
+    /**
+     * User Records
+     */
+
+    val remoteRecord = stylishRepository.getUserViewRecords()
+
+
+    private val _record = MutableLiveData<List<UserRecord>>()
+    val record: LiveData<List<UserRecord>>
+        get() = _record
+
+    fun saveRecord() {
+        if (!UserManager.isLoggedIn) {
+            // save record at local
+
+            coroutineScope.launch {
+                stylishRepository.insert(UserRecord(arguments.id, arguments.title, arguments.price, arguments.mainImage))
+            }
+        }
+    }
+
+    fun fetchUserRecord() {
+        if (UserManager.isLoggedIn) {
+            // fetch Online
+
+            coroutineScope.launch {
+                UserManager.userToken?.let {
+                    val result = stylishRepository.getUserViewingRecord(it)
+
+                    when(result) {
+                        is Result.Success -> {
+                            _record.value = result.data.records
+                        }
+
+                        is Result.Error -> {
+                            Log.i("fetchUserRecord", "error: ${result.exception.message}")
+                        }
+
+                        is Result.Fail -> {
+                            Log.i("fetchUserRecord", "error: ${result.error}")
+                        }
+
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+
+        } else {
+            // fetch database
+            coroutineScope.launch {
+
+            }
+        }
+    }
+
 }

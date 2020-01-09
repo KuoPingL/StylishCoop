@@ -4,6 +4,7 @@
 
     <data>
         <variable name="viewModel" type="app.appworks.school.stylish.detail.DetailViewModel"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -360,7 +361,6 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="24dp"
                         android:text="@{viewModel.product.note}"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/view_detail_note_separation"
                         app:layout_constraintTop_toTopOf="@+id/text_detail_note_title" />
@@ -376,9 +376,69 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/text_detail_record"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@id/text_detail_title"
+                        app:layout_constraintEnd_toEndOf="@id/text_detail_price"
+                        style="@style/DetailTitle"
+                        android:text="您曾瀏覽過的商品"
+                        app:layout_constraintTop_toBottomOf="@id/text_detail_note"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_detail_records"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintStart_toStartOf="@id/text_detail_title"
+                        app:layout_constraintEnd_toEndOf="@id/text_detail_price"
+                        app:layout_constraintTop_toBottomOf="@id/text_detail_record"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal"
+                        />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
         </ScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_detail_chatbot"
+                app:layout_constraintBottom_toTopOf="@id/layout_detail_bottom"
+                android:layout_marginBottom="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="30dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_chatbotlayout"
+                >
+
+            <ImageView
+                    android:src="@drawable/bg_badge_main"
+                    android:visibility="@{viewModel.isChatbotShown == false || viewModel.isChatbotShown == null ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="@{() -> viewModel.showChatbot(viewModel.isChatbotShown)}"/>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="@{viewModel.isChatbotShown == true ? View.VISIBLE : View.GONE}">
+                <fragment
+                        android:id="@+id/fragment_detail_chatbot"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:name="app.appworks.school.stylish.detail.chatbot.ChatbotMainFragment"
+                        />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_detail_bottom"

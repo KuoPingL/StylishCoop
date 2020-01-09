@@ -112,6 +112,14 @@
     <string name="morning">morning</string>
     <string name="afternoon">afternoon</string>
     <string name="anytime">anytime</string>
+    <string name="chatbot_name">Chatbot</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="hint_password_required">請輸入密碼</string>
+    <string name="hint_email_required">請輸入電子郵箱</string>
+    <string name="confirmation_text">登入</string>
+    <string name="cancel_text">取消</string>
+
 
     <!-- CURRENCY -->
     <string name="currency_twd">TWD</string>
@@ -132,6 +140,12 @@
 
     <string name ="textView_popularity">按照人氣高低排序</string>
     <string name ="textView_price">按照價錢高低排序</string>
+    <string name="hint_username">請輸入帳號名稱</string>
+
+    <string name="textView_close_get_coupon">Watch Full Ad To Get Coupons</string>
+    <string name="textView_login_to_get_coupons">Sign Up/In To Get Coupons</string>
+    <string name="button_sign_up_or_in">Sign Up/In</string>
+    <string name="button_close_just_watch_ad">Another Time</string>
 
 
 </resources>

@@ -20,15 +20,22 @@ import app.appworks.school.stylish.catalog.item.CatalogItemAdapter
 import app.appworks.school.stylish.component.ColorSquare
 import app.appworks.school.stylish.component.SelectedSquare
 import app.appworks.school.stylish.data.*
+import app.appworks.school.stylish.data.Currency
 import app.appworks.school.stylish.detail.DetailCircleAdapter
 import app.appworks.school.stylish.detail.DetailColorAdapter
 import app.appworks.school.stylish.detail.DetailGalleryAdapter
+import app.appworks.school.stylish.detail.chatbot.ChatbotAdapter
+import app.appworks.school.stylish.detail.chatbot.ChatbotButtonAdapter
+import app.appworks.school.stylish.detail.chatbot.ChatbotItem
 import app.appworks.school.stylish.home.HomeAdapter
 import app.appworks.school.stylish.login.UserManager
 import app.appworks.school.stylish.network.LoadApiStatus
 import app.appworks.school.stylish.payment.PaymentAdapter
 import app.appworks.school.stylish.util.Util.getColor
 import com.bumptech.glide.request.RequestOptions
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.math.abs
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -108,6 +115,34 @@ fun bindAdd2cartSizesRecyclerView(recyclerView: RecyclerView, variants: List<Var
             submitList(it)
         }
     }
+}
+
+/**
+ * CHATBOT
+ */
+
+@BindingAdapter("chatbotItems")
+fun bindChatbotItemRecyclerView(recyclerView: RecyclerView, chatbotItems: List<ChatbotItem>?) {
+    val adapter = recyclerView.adapter as? ChatbotAdapter
+    adapter?.submitList(chatbotItems)
+    chatbotItems?.size?.let {size ->
+        if (size > 0) {
+//            recyclerView.smoothScrollBy(0, abs(recyclerView.computeVerticalScrollOffset()))
+            recyclerView.smoothScrollToPosition(size)
+        }
+    }
+}
+
+@BindingAdapter("chatbotButtons")
+fun bindChatbotButtonRecyclerView(recyclerView: RecyclerView, chatbotButtons: List<ChatbotButton>?) {
+    val adapter = recyclerView.adapter as? ChatbotButtonAdapter
+    adapter?.submitList(chatbotButtons)
+}
+
+@BindingAdapter("dateToString")
+fun bindTextViewWithDate(textView: TextView, date: Date) {
+    val format = SimpleDateFormat("hh:mm", Locale.getDefault())
+    textView.text = format.format(date)
 }
 
 // Draw Square

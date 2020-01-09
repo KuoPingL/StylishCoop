@@ -25,8 +25,9 @@ class LogoActivity : BaseActivity() {
 
             startLogoAnimation4Particle()
             Handler().postDelayed({
-                binding.particleLogo.visibility = View.VISIBLE
-                binding.particleLogo.startAnimation()
+                binding.particleLogo.visibility = View.INVISIBLE
+//                binding.particleLogo.startAnimation()
+                this.leave(binding.particleLogo)
                 binding.particleLogo.setOnClickListener(this::leave)
 
             }, duration)

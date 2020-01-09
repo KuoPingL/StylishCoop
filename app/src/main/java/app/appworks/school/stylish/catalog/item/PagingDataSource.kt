@@ -50,7 +50,9 @@ class PagingDataSource(val type: CatalogTypeFilter, private val sort: Sort?, pri
             _statusInitialLoad.value = LoadApiStatus.LOADING
 
             val result = StylishApplication.instance.stylishRepository
-                .getProductList(token = UserManager.userToken ?: "", currency = UserManager.userCurrency ,type = type.value)
+                .getProductList(token = UserManager.userToken ?: "",
+                    currency = UserManager.userCurrency ,
+                    type = type.value, sort = sort, order = order)
 
             when (result) {
                 is Result.Success -> {
@@ -84,7 +86,8 @@ class PagingDataSource(val type: CatalogTypeFilter, private val sort: Sort?, pri
 
         coroutineScope.launch {
             val result = StylishApplication.instance.stylishRepository
-                .getProductList(token = UserManager.userToken ?: "", currency = UserManager.userCurrency,type = type.value, paging = params.key)
+                .getProductList(token = UserManager.userToken ?: "", currency = UserManager.userCurrency,
+                    type = type.value, paging = params.key, sort = sort, order = order)
 
             when (result) {
                 is Result.Success -> {

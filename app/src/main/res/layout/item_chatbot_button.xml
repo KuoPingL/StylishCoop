@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+                name="chatbotButton"
+                type="app.appworks.school.stylish.data.ChatbotButton" />
+        <variable
+                name="viewModel"
+                type="app.appworks.school.stylish.detail.chatbot.ChatbotViewModel" />
+    </data>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@{chatbotButton.title}"
+                android:onClick="@{() -> viewModel.userSelectedAPI(chatbotButton.api, chatbotButton.question, viewModel.weight, viewModel.height)}"
+                android:background="@drawable/bg_login_button"
+                />
+
+    </LinearLayout>
+</layout>

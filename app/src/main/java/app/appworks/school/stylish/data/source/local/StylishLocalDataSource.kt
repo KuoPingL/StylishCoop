@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import app.appworks.school.stylish.data.*
 import app.appworks.school.stylish.data.source.StylishDataSource
-import app.appworks.school.stylish.login.Currency
 import app.appworks.school.stylish.network.Order
 import app.appworks.school.stylish.network.Sort
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +15,29 @@ import kotlinx.coroutines.withContext
  * Concrete implementation of a Stylish source as a db.
  */
 class StylishLocalDataSource(val context: Context) : StylishDataSource {
+
+    override suspend fun createGroupBuy(addGroupBuyBody: AddGroupBuyBody): Result<AddGroupBuyResult> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun getGroupBuys(token: String): Result<GetGroupBuyResult> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun updateGroupBuy(
+        token: String,
+        productID: Long
+    ): Result<JoinGroupBuyResult> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun getReplyFromChatbot(question: ChatbotBody): Result<ChatbotReplyMultiTypeResult> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun getAd(): Result<AdResult> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override suspend fun getProductAll(token: String?, currency: String): Result<List<HomeItem>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -43,6 +65,7 @@ class StylishLocalDataSource(val context: Context) : StylishDataSource {
 
     override suspend fun getUserViewingRecord(token: String): Result<UserRecordsResult> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        StylishViewingRecordDatabase.getInstance(context).viewRecordDatabaseDao.fetchAllRecords()
     }
 
     override suspend fun userSignUp(name: String, email: String, password: String): Result<UserSignUpResult> {
@@ -105,6 +128,42 @@ class StylishLocalDataSource(val context: Context) : StylishDataSource {
     override suspend fun clearProductInCart() {
         withContext(Dispatchers.IO) {
             StylishDatabase.getInstance(context).stylishDatabaseDao.clear()
+        }
+    }
+
+
+    /**
+     * CHATBOT
+     */
+    override fun getAllChats(): LiveData<List<Chat>> {
+        return ChatbotDatabase.getInstance(context).chatbotDatabaseDao.fetchAllChats()
+    }
+
+    override suspend fun insertChat(chat: Chat) {
+        withContext(Dispatchers.IO) {
+            ChatbotDatabase.getInstance(context).chatbotDatabaseDao.insert(chat)
+        }
+    }
+
+    override suspend fun clearChats() {
+        withContext(Dispatchers.IO) {
+            ChatbotDatabase.getInstance(context).chatbotDatabaseDao.clearTable()
+        }
+    }
+
+    override fun getUserViewRecords(): LiveData<List<UserRecord>> {
+        return StylishViewingRecordDatabase.getInstance(context).viewRecordDatabaseDao.fetchAllRecords()
+    }
+
+    override suspend fun deleteAllViewRecords() {
+        withContext(Dispatchers.IO) {
+            StylishViewingRecordDatabase.getInstance(context).viewRecordDatabaseDao.delete()
+        }
+    }
+
+    override suspend fun insert(userRecord: UserRecord) {
+        withContext(Dispatchers.IO) {
+            StylishViewingRecordDatabase.getInstance(context).viewRecordDatabaseDao.insert(userRecord)
         }
     }
 

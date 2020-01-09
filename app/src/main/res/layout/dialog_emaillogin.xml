@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+                name="viewModel"
+                type="app.appworks.school.stylish.login.EmailLoginViewModel" />
+        <variable
+                name="dialog"
+                type="app.appworks.school.stylish.login.EmailLoginDialog" />
+        <import type="android.view.View"/>
+    </data>
+
+    <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".login.EmailLoginDialog">
+        <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/bg_login_corner"
+                android:orientation="vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/textview_emaillogin_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:textColor="@android:color/black"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:text="WELCOME" />
+
+            <LinearLayout
+                    android:id="@+id/layout_emaillogin_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="40dp"
+                    android:paddingEnd="40dp"
+                    android:layout_marginTop="20dp">
+
+                <TextView
+                        android:id="@+id/textview_emaillogin_signin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="@string/sign_in"
+                        android:textAlignment="center"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="@{() -> viewModel.setSignIn()}"
+                        android:textColor="@color/color_login_button_text"/>
+
+                <TextView
+                        android:id="@+id/textview_emaillogin_signup"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="@string/sign_up"
+                        android:textAlignment="center"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="@{()->viewModel.setSignUp()}"
+                        android:textColor="@color/color_login_button_text"/>
+
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:orientation="vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+
+                <!--Check Visibility -->
+                <EditText
+                        android:id="@+id/edit_emaillogin_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="@string/hint_username"
+                        android:layout_marginTop="10dp"
+                        android:text="@={viewModel.username}"
+                        android:inputType="textPersonName"
+                        android:visibility="@{viewModel.isSignUp == false ? View.GONE:View.VISIBLE}"/>
+                <TextView
+                        android:id="@+id/textview_emaillogin_name_error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red_d0021b"
+                        android:textSize="13sp"
+                        android:layout_marginTop="5dp"
+                        android:visibility='@{viewModel.nameErrorMessage != null  &amp;&amp; viewModel.isSignUp == false ? View.VISIBLE:View.GONE}'
+                        tools:text="請以英文字母和數字"
+                        android:text="@{viewModel.emailErrorMessage}"/>
+                <EditText
+                        android:id="@+id/edit_emaillogin_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="@string/hint_email_required"
+                        android:text="@={viewModel.userEmail}"
+                        android:inputType="textEmailAddress"/>
+                <TextView
+                        android:id="@+id/textview_emaillogin_email_error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red_d0021b"
+                        android:textSize="13sp"
+                        android:layout_marginTop="5dp"
+                        android:visibility='@{viewModel.emailErrorMessage == null  ? View.GONE:View.VISIBLE}'
+                        tools:text="電子郵件格式有誤"
+                        android:text="@{viewModel.emailErrorMessage}"/>
+
+                <EditText
+                        android:id="@+id/edit_emaillogin_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="@string/hint_password_required"
+                        android:text="@={viewModel.password}"
+                        android:inputType="textPassword"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red_d0021b"
+                        android:textSize="13sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        tools:text="密碼格式有誤"
+                        android:visibility="@{viewModel.passwordErrorMessage == null ? View.GONE: View.VISIBLE}"
+                        android:text="@{viewModel.passwordErrorMessage}"/>
+
+            </LinearLayout>
+
+            <Button
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/noto_sans"
+                    android:text="@{viewModel.confirmationMessage}"
+                    android:layout_marginBottom="5dp"
+                    android:onClick="@{()->viewModel.signInOrSignUp()}"
+                    android:background="@drawable/bg_login_button"/>
+            <Button
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/noto_sans"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/cancel_text"
+                    android:onClick="@{()->dialog.dismiss()}"
+                    android:background="@drawable/bg_login_button"
+                    />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
